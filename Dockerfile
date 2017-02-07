@@ -14,4 +14,4 @@ RUN \
   chmod a+x /root/mysqldump-to-s3.sh && \
   mkdir /dumps
 
-ENTRYPOINT ["/root/mysql_dump_to_s3.sh"]
+ENTRYPOINT ["/root/mysqldump-to-s3.sh"]
