@@ -26,6 +26,29 @@ if [[ -z $S3_PREFIX ]] ; then
     exit 1
 fi
 
+# Enable Slack WebHook Notification if ENVs are set
+SLACK_NOTIFY=false
+if ! [[ -z $SLACK_WEBHOOK ]] ; then
+    SLACK_NOTIFY=true
+    if [[ -z $SLACK_CHANNEL ]] ; then SLACK_NOTIFY=false ; fi
+    if [[ -z $SLACK_BOTNAME ]] ; then SLACK_BOTNAME="mysqldump-to-s3" ; fi
+fi
+
+# Failure function
+failure () {
+    ERROR_MGS="$1"
+    echo "ERROR: ${ERROR_MGS}"
+    if [[ $SLACK_NOTIFY == "true" ]] ; then 
+        SLACK_PRETEXT="MySQLdump Failure:"
+        SLACK_MESSAGE="${ERROR_MGS}!"
+        SLACK_COLOR="#FF0000"
+        echo "Posting Slack Notification to WebHook: $SLACK_WEBHOOK";
+        PAYLOAD="payload={\"channel\": \"${SLACK_CHANNEL}\", \"username\": \"${SLACK_BOTNAME}\", \"attachments\":[{\"fallback\":\"${SLACK_PRETEXT} ${SLACK_MESSAGE}\", \"pretext\":\":fire::fire:*${SLACK_PRETEXT} ${SLACK_MESSAGE}*:fire::fire:\", \"color\":\"${SLACK_COLOR}\", \"mrkdwn_in\":[\"text\", \"pretext\"], \"fields\":[{\"title\":\"Error Mesage\", \"value\":\"${ERROR_MGS}\", \"short\":false}]}] }"
+        CURL_RESULT=`curl -s -S -X POST --data-urlencode "$PAYLOAD" $SLACK_WEBHOOK`
+    fi
+    return 0
+}
+
 DATE=$(date +%Y%m%d)
 DUMPDIR=/dumps
 DUMPFILE=${DBHOST}_${DBNAME}_${DATE}.sql
@@ -36,21 +59,21 @@ mysqldump -h ${DBHOST} -u${DBUSER} -p${DBPASS} ${DBNAME} > ${DUMPDIR}/${DUMPFILE
 
 # test dump file
 if [[ ! -f ${DUMPDIR}/${DUMPFILE} ]]; then
-    echo "ERROR: Dump file ${DUMPDIR}/${DUMPFILE} does not exist (dump upload cancelled).";
+    failure "Dump file ${DUMPDIR}/${DUMPFILE} does not exist (dump upload cancelled).";
     exit 1;
 fi
 if [[ ! -s ${DUMPDIR}/${DUMPFILE} ]]; then
-    echo "ERROR: Dump file ${DUMPDIR}/${DUMPFILE} is empty (dump upload cancelled).";
+    failure "Dump file ${DUMPDIR}/${DUMPFILE} is empty (dump upload cancelled).";
     exit 1;
 fi
 FIRSTLINE=$(head -n1 ${DUMPDIR}/${DUMPFILE})
 if [[ ! $FIRSTLINE == *"MySQL dump"* ]]; then 
-    echo "ERROR: First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
+    failure "First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
     exit 1;
 fi
 LASTLINE=$(tail -n1 ${DUMPDIR}/${DUMPFILE})
 if [[ ! $LASTLINE == *"Dump completed"* ]]; then 
-    echo "ERROR: First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
+    failure "First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
     exit 1;
 fi
 
