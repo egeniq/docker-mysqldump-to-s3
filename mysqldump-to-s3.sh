@@ -36,7 +36,7 @@ fi
 
 # Make string of dump parameters (for adding to log msg)
 if ! [[ -z $PARAMS ]] ; then
-    $PARAMS_MSG="(params: $PARAMS)"
+    PARAMS_MSG="(params: $PARAMS)"
 fi
 
 # Failure function
