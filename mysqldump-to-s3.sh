@@ -34,6 +34,11 @@ if ! [[ -z $SLACK_WEBHOOK ]] ; then
     if [[ -z $SLACK_BOTNAME ]] ; then SLACK_BOTNAME="mysqldump-to-s3" ; fi
 fi
 
+# Make string of dump parameters (for adding to log msg)
+if ! [[ -z $PARAMS ]] ; then
+    $PARAMS_MSG="(params: $PARAMS)"
+fi
+
 # Failure function
 failure () {
     ERROR_MGS="$1"
@@ -54,8 +59,8 @@ DUMPDIR=/dumps
 DUMPFILE=${DBHOST}_${DBNAME}_${DATE}.sql
 
 # dump database
-echo "Dumping ${DBNAME} from ${DBHOST}"
-mysqldump -h ${DBHOST} -u${DBUSER} -p${DBPASS} ${DBNAME} > ${DUMPDIR}/${DUMPFILE}
+echo "Dumping ${DBNAME} from ${DBHOST} ${PARAMS_MSG}"
+mysqldump -h ${DBHOST} -u${DBUSER} -p${DBPASS} ${PARAMS} ${DBNAME} > ${DUMPDIR}/${DUMPFILE}
 
 # test dump file
 if [[ ! -f ${DUMPDIR}/${DUMPFILE} ]]; then

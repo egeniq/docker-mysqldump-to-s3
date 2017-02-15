@@ -13,6 +13,8 @@ Docker container that dumps a single mysql db to an s3 bucket
 
    `DBPASS=<DB_SERVER_PASSWORD>`
 
+   `PARAMS=<DB_DUMP_PARAMETERS>` (Optional)
+
    `DBNAME=<DATABASE_NAME>`
 
    `S3_BUCKET=<S3_BUCKET_NAME>` (Destination bucket for the sql dump file)
