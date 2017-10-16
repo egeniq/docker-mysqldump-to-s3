@@ -1,6 +1,6 @@
-FROM uqlibrary/docker-base:12
+FROM uqlibrary/docker-base:13
 
-RUN rpm -ivh https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+RUN rpm -ivh https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 
 COPY mysql-community.repo /etc/yum.repos.d/mysql-community.repo
 COPY mysqldump-to-s3.sh /root/mysqldump-to-s3.sh
