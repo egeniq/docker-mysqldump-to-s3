@@ -1,4 +1,4 @@
-FROM uqlibrary/docker-base:13
+FROM uqlibrary/centos:190717
 
 RUN rpm -ivh https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 
