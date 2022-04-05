@@ -71,16 +71,17 @@ if [[ ! -s ${DUMPDIR}/${DUMPFILE} ]]; then
     failure "Dump file ${DUMPDIR}/${DUMPFILE} is empty (dump upload cancelled).";
     exit 1;
 fi
-FIRSTLINE=$(head -n1 ${DUMPDIR}/${DUMPFILE})
-if [[ ! $FIRSTLINE == *"MySQL dump"* ]]; then
-    failure "First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
-    exit 1;
-fi
-LASTLINE=$(tail -n1 ${DUMPDIR}/${DUMPFILE})
-if [[ ! $LASTLINE == *"Dump completed"* ]]; then
-    failure "First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
-    exit 1;
-fi
+
+#FIRSTLINE=$(head -n1 ${DUMPDIR}/${DUMPFILE})
+#if [[ ! $FIRSTLINE == *"MySQL dump"* ]]; then
+#    failure "First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
+#    exit 1;
+#fi
+#LASTLINE=$(tail -n1 ${DUMPDIR}/${DUMPFILE})
+#if [[ ! $LASTLINE == *"Dump completed"* ]]; then
+#    failure "First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
+#    exit 1;
+#fi
 
 # compress dump file
 echo "XZ Compressing dump file ..."
