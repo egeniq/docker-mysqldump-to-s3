@@ -43,7 +43,7 @@ fi
 failure () {
     ERROR_MGS="$1"
     echo "ERROR: ${ERROR_MGS}"
-    if [[ $SLACK_NOTIFY == "true" ]] ; then 
+    if [[ $SLACK_NOTIFY == "true" ]] ; then
         SLACK_PRETEXT="MySQLdump Failure:"
         SLACK_MESSAGE="${ERROR_MGS}!"
         SLACK_COLOR="#FF0000"
@@ -54,7 +54,7 @@ failure () {
     return 0
 }
 
-DATE=$(date +%Y%m%d)
+DATE=$(date +%Y%m%d_%H%M)
 DUMPDIR=/dumps
 DUMPFILE=${DBHOST}_${DBNAME}_${DATE}.sql
 
@@ -72,12 +72,12 @@ if [[ ! -s ${DUMPDIR}/${DUMPFILE} ]]; then
     exit 1;
 fi
 FIRSTLINE=$(head -n1 ${DUMPDIR}/${DUMPFILE})
-if [[ ! $FIRSTLINE == *"MySQL dump"* ]]; then 
+if [[ ! $FIRSTLINE == *"MySQL dump"* ]]; then
     failure "First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
     exit 1;
 fi
 LASTLINE=$(tail -n1 ${DUMPDIR}/${DUMPFILE})
-if [[ ! $LASTLINE == *"Dump completed"* ]]; then 
+if [[ ! $LASTLINE == *"Dump completed"* ]]; then
     failure "First line of dump file ${DUMPDIR}/${DUMPFILE} does not pass test (dump upload cancelled).";
     exit 1;
 fi
