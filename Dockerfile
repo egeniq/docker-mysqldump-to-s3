@@ -1,6 +1,5 @@
 FROM debian:stable-slim
 
-COPY mysql-community.repo /etc/yum.repos.d/mysql-community.repo
 COPY mysqldump-to-s3.sh /root/mysqldump-to-s3.sh
 
 RUN \
