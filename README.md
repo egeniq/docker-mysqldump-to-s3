@@ -1,5 +1,5 @@
 # docker-mysqldump-to-s3
-Docker container that dumps a single mysql db to an s3 bucket
+Fork of [docker-mysqldump-to-s3](https://github.com/uqlibrary/docker-mysqldump-to-s3) to add hour and minute to the filename.
 
 ### Requirements
 
