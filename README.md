@@ -1,5 +1,6 @@
 # docker-mysqldump-to-s3
-Fork of [docker-mysqldump-to-s3](https://github.com/uqlibrary/docker-mysqldump-to-s3) to add hour and minute to the filename.
+Fork of [docker-mysqldump-to-s3](https://github.com/uqlibrary/docker-mysqldump-to-s3) to add hour and minute to the 
+filename, and switch to debian-slim.
 
 ### Requirements
 
